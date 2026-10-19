@@ -1,0 +1,1577 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>O checkout de 27 Minutos — Case Contabilizei</title>
+
+  <!-- Google Fonts: Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Reveal.js CDN -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+
+  <style>
+    /* ==========================================================================
+       EDITORIAL UX RESEARCH THEME — SYSTEM RESET & VARIABLES
+       ========================================================================== */
+    :root {
+      --bg-main: #050505;
+      --bg-surface: #111111;
+      --bg-surface-elevated: #181818;
+      --border-subtle: #222222;
+      --border-highlight: rgba(4, 247, 247, 0.35);
+
+      --accent-emerald: #04f7f7;
+      --accent-emerald-glow: rgba(4, 247, 247, 0.18);
+      --accent-danger: #FF5A5F;
+      --accent-danger-glow: rgba(255, 90, 95, 0.25);
+
+      --text-pure: #FFFFFF;
+      --text-muted: #8E8E93;
+      --text-subtle: #C7C7CC;
+      --text-card-dark: #111111;
+
+      --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+
+      /* Curva de animação executiva (suave, precisa e sem bounce) */
+      --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-in-out-soft: cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: var(--bg-main);
+      color: var(--text-pure);
+      font-family: var(--font-primary);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Edge-to-edge full bleed Reveal layout without letterboxing borders */
+    .reveal {
+      background-color: var(--bg-main) !important;
+      width: 100vw !important;
+      height: 100vh !important;
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+
+    .reveal .slides {
+      width: 100% !important;
+      height: 100% !important;
+      inset: 0 !important;
+      transform: none !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      text-align: left !important;
+    }
+
+    .reveal .slides section {
+      width: 100vw !important;
+      height: 100vh !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      top: 0 !important;
+      left: 0 !important;
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+
+    /* Minimalist Progress Bar */
+    .reveal .progress {
+      background: rgba(255, 255, 255, 0.08);
+      height: 3px;
+    }
+    .reveal .progress span {
+      background: var(--accent-emerald);
+      box-shadow: 0 0 10px var(--accent-emerald);
+      transition: width 600ms var(--ease-out-expo);
+    }
+
+    /* Slide number / Editorial counter */
+    .reveal .slide-number {
+      font-family: var(--font-mono);
+      font-size: 11px !important;
+      color: var(--text-muted) !important;
+      background: rgba(5, 5, 5, 0.82) !important;
+      border: 1px solid var(--border-subtle);
+      border-radius: 6px;
+      padding: 4px 8px !important;
+      right: 24px !important;
+      bottom: 16px !important;
+      backdrop-filter: blur(8px);
+      z-index: 90;
+    }
+
+    /* Presenter Notes badge hint */
+    .notes-hint {
+      position: fixed;
+      left: 24px;
+      bottom: 16px;
+      z-index: 100;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-muted);
+      border: 1px solid var(--border-subtle);
+      padding: 4px 10px;
+      border-radius: 6px;
+      background: rgba(17, 17, 17, 0.85);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      user-select: none;
+    }
+    .notes-hint kbd {
+      background: var(--bg-surface-elevated);
+      color: var(--accent-emerald);
+      padding: 1px 5px;
+      border-radius: 4px;
+      font-weight: 700;
+      border: 1px solid var(--border-subtle);
+    }
+
+    /* ==========================================================================
+       SUBTLE & CHIC EXECUTIVE MOTION ENGINE (BTG STANDARD)
+       ========================================================================== */
+    .anim-up {
+      opacity: 0;
+      transform: translateY(22px);
+      transition:
+        opacity 0.85s var(--ease-out-expo),
+        transform 0.85s var(--ease-out-expo);
+      will-change: opacity, transform;
+    }
+
+    .anim-scale {
+      opacity: 0;
+      transform: translateY(18px) scale(0.98);
+      transition:
+        opacity 0.95s var(--ease-out-expo),
+        transform 0.95s var(--ease-out-expo);
+      will-change: opacity, transform;
+    }
+
+    .reveal .slides section.present .anim-up,
+    .reveal .slides section.present .anim-scale {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    /* Stagger delays */
+    .delay-1 { transition-delay: 90ms !important; }
+    .delay-2 { transition-delay: 180ms !important; }
+    .delay-3 { transition-delay: 270ms !important; }
+    .delay-4 { transition-delay: 360ms !important; }
+    .delay-5 { transition-delay: 450ms !important; }
+    .delay-6 { transition-delay: 540ms !important; }
+
+    /* Subtle Ken Burns effect on editorial photographs */
+    .split-media,
+    .process-media {
+      transform: scale(1.045);
+      filter: brightness(0.88);
+      transition:
+        transform 1.8s var(--ease-out-expo),
+        filter 1.4s var(--ease-out-expo);
+      will-change: transform, filter;
+    }
+
+    .reveal .slides section.present .split-media,
+    .reveal .slides section.present .process-media {
+      transform: scale(1);
+      filter: brightness(1);
+    }
+
+    /* Subtle pulse on editorial status dots */
+    @keyframes subtlePulse {
+      0%, 100% { box-shadow: 0 0 6px var(--accent-emerald); opacity: 1; }
+      50% { box-shadow: 0 0 14px var(--accent-emerald); opacity: 0.7; }
+    }
+
+    /* ==========================================================================
+       TYPOGRAPHY & EDITORIAL TAGS
+       ========================================================================== */
+    .editorial-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--accent-emerald);
+      background: rgba(4, 247, 247, 0.08);
+      border: 1px solid var(--border-highlight);
+      padding: 5px 12px;
+      border-radius: 100px;
+      margin-bottom: 1.2rem;
+      font-weight: 600;
+      width: fit-content;
+    }
+    .editorial-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent-emerald);
+      box-shadow: 0 0 8px var(--accent-emerald);
+      animation: subtlePulse 3s infinite ease-in-out;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: var(--font-primary);
+      color: var(--text-pure);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1.1;
+    }
+
+    .slide-title-hero {
+      font-size: 3.5rem;
+      font-weight: 900;
+      line-height: 1.05;
+      letter-spacing: -0.045em;
+      margin-bottom: 0.8rem;
+    }
+
+    .slide-title {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.035em;
+    }
+
+    .sub-emerald {
+      color: var(--accent-emerald);
+      font-size: 1.2rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      text-transform: uppercase;
+      margin-bottom: 1.4rem;
+    }
+
+    .text-body {
+      font-size: 1.08rem;
+      line-height: 1.6;
+      color: var(--text-subtle);
+      max-width: 640px;
+    }
+
+    /* Lists */
+    ul.editorial-list {
+      list-style: none;
+      padding: 0;
+      margin: 1.2rem 0 0 0;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    ul.editorial-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      font-size: 1.05rem;
+      color: var(--text-subtle);
+      line-height: 1.45;
+    }
+    ul.editorial-list li .bullet-num {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--accent-emerald);
+      background: rgba(4, 247, 247, 0.1);
+      border: 1px solid var(--border-highlight);
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    /* ==========================================================================
+       UI SHOWCASE STAGE & MOCKUP FRAMES
+       ========================================================================== */
+    .ui-showcase-stage {
+      flex: 1;
+      height: 100vh;
+      background: 
+        radial-gradient(circle at 50% 45%, rgba(4, 247, 247, 0.12) 0%, rgba(5, 5, 5, 0) 68%),
+        linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+        #080A0F;
+      background-size: 100% 100%, 32px 32px, 32px 32px, 100% 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2vh 2.5vw 4.5vh 2.5vw;
+      position: relative;
+      overflow: hidden;
+      border-right: 1px solid var(--border-subtle);
+    }
+
+    .split-screen.reverse-order .ui-showcase-stage {
+      border-right: none;
+      border-left: 1px solid var(--border-subtle);
+    }
+
+    .browser-frame {
+      width: 100%;
+      max-width: 680px;
+      background: #FFFFFF;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.75), 0 0 25px rgba(4, 247, 247, 0.08);
+      position: relative;
+      transition: transform 0.4s var(--ease-out-expo), box-shadow 0.4s var(--ease-out-expo);
+    }
+
+    .browser-frame:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 28px 70px rgba(0, 0, 0, 0.85), 0 0 32px rgba(4, 247, 247, 0.16);
+    }
+
+    .browser-frame.legacy-frame {
+      border-color: rgba(255, 90, 95, 0.45);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.75), 0 0 20px rgba(255, 90, 95, 0.12);
+    }
+
+    .browser-header {
+      background: #0D1117;
+      padding: 7px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #222;
+    }
+
+    .browser-dots {
+      display: flex;
+      gap: 6px;
+    }
+    .browser-dots span {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #30363D;
+    }
+    .browser-dots span:nth-child(1) { background: #FF5F56; }
+    .browser-dots span:nth-child(2) { background: #FFBD2E; }
+    .browser-dots span:nth-child(3) { background: #27C93F; }
+
+    .browser-url {
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      color: var(--text-muted);
+      background: rgba(255, 255, 255, 0.04);
+      padding: 2px 10px;
+      border-radius: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .browser-tag-status {
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+    .tag-legacy {
+      background: rgba(255, 90, 95, 0.18);
+      color: var(--accent-danger);
+      border: 1px solid rgba(255, 90, 95, 0.35);
+    }
+    .tag-new {
+      background: rgba(4, 247, 247, 0.15);
+      color: var(--accent-emerald);
+      border: 1px solid var(--border-highlight);
+    }
+
+    .browser-frame img {
+      width: 100%;
+      height: auto;
+      display: block;
+      object-fit: contain;
+      background: #FFFFFF;
+    }
+
+    .ui-callout-pill {
+      position: absolute;
+      background: rgba(5, 5, 5, 0.92);
+      border: 1px solid var(--accent-emerald);
+      color: var(--accent-emerald);
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 5px 11px;
+      border-radius: 100px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), 0 0 12px rgba(4, 247, 247, 0.25);
+      backdrop-filter: blur(8px);
+      z-index: 5;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .ui-callout-pill.danger-pill {
+      border-color: var(--accent-danger);
+      color: var(--accent-danger);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), 0 0 12px var(--accent-danger-glow);
+    }
+
+    /* Simulated Heatmap Overlay for Discovery Slide */
+    .heatmap-spot {
+      position: absolute;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 30, 0, 0.68) 0%, rgba(255, 165, 0, 0.45) 45%, rgba(4, 247, 247, 0) 75%);
+      pointer-events: none;
+      filter: blur(5px);
+      z-index: 3;
+    }
+
+    /* ==========================================================================
+       STRUCTURAL LAYOUT CLASSES
+       ========================================================================== */
+
+    /* 1. .split-screen (50/50 Flexbox) */
+    .split-screen {
+      display: flex;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+    .split-screen .split-media-wrap {
+      flex: 1;
+      height: 100vh;
+      overflow: hidden;
+      position: relative;
+    }
+    .split-screen .split-media {
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      position: relative;
+    }
+    .split-screen .split-media::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, rgba(5,5,5,0) 72%, rgba(5,5,5,0.88) 100%);
+    }
+    .split-screen .split-content {
+      flex: 1;
+      height: 100vh;
+      padding: 5vw 5.5vw;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      text-align: left;
+      background: var(--bg-main);
+      box-sizing: border-box;
+      z-index: 2;
+    }
+
+    /* 2. .split-reverse (50/50 Flexbox, Left text, Right 2 stacked images) */
+    .split-reverse {
+      display: flex;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+    .split-reverse .split-content {
+      flex: 1;
+      height: 100vh;
+      padding: 5vw 5.5vw;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      text-align: left;
+      background: var(--bg-main);
+      box-sizing: border-box;
+    }
+    .split-reverse .stacked-media {
+      flex: 1;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 18px;
+      background: #080A0F;
+      border-left: 1px solid var(--border-subtle);
+    }
+    .split-reverse .stacked-media .stack-item {
+      height: calc(50vh - 24px);
+      width: 100%;
+      background-color: #12161F;
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+      position: relative;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      overflow: hidden;
+      box-shadow: 0 14px 35px rgba(0, 0, 0, 0.6);
+    }
+
+    /* 3. .overlay-card (Full screen background with floating dark translucent card + evidence) */
+    .overlay-card {
+      width: 100vw;
+      height: 100vh;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 5vw;
+      gap: 3vw;
+      box-sizing: border-box;
+    }
+    .overlay-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 25% 50%, rgba(5,5,5,0.85) 0%, rgba(5,5,5,0.95) 100%);
+      backdrop-filter: blur(6px);
+    }
+    .overlay-card .floating-card {
+      position: relative;
+      z-index: 2;
+      background: rgba(17, 17, 17, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 18px;
+      padding: 40px 44px;
+      max-width: 580px;
+      flex: 1;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(20px);
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .overlay-card .legacy-evidence-col {
+      position: relative;
+      z-index: 2;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      align-items: center;
+      justify-content: center;
+      max-width: 600px;
+    }
+    .overlay-card .legacy-evidence-col .browser-frame img {
+      max-height: 35vh;
+      object-fit: contain;
+    }
+
+    /* 4. .process-list (Vertical image left, Stack of white cards right) */
+    .process-list {
+      display: flex;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+    .process-list .process-media-wrap {
+      flex: 0.42;
+      height: 100vh;
+      overflow: hidden;
+      position: relative;
+    }
+    .process-list .process-media {
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+    }
+    .process-list .process-media::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, rgba(5,5,5,0) 65%, var(--bg-main) 100%);
+    }
+    .process-list .process-content {
+      flex: 0.58;
+      height: 100vh;
+      padding: 4vw 5vw;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      background: var(--bg-main);
+      box-sizing: border-box;
+      z-index: 2;
+    }
+    .process-card-stack {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-top: 1.4rem;
+    }
+    .process-white-card {
+      background: #FFFFFF;
+      color: var(--text-card-dark);
+      border-radius: 14px;
+      padding: 22px 26px;
+      display: flex;
+      align-items: flex-start;
+      gap: 18px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+      transition: transform 0.35s var(--ease-out-expo), box-shadow 0.35s var(--ease-out-expo);
+    }
+    .process-white-card:hover {
+      transform: translateX(6px);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+    }
+    .process-white-card .step-index {
+      font-family: var(--font-mono);
+      font-size: 1.25rem;
+      font-weight: 900;
+      color: #007a82;
+      background: rgba(4, 247, 247, 0.18);
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .process-white-card h4 {
+      color: #111111;
+      font-size: 1.15rem;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+    .process-white-card p {
+      color: #4A4A4A;
+      font-size: 0.95rem;
+      line-height: 1.45;
+    }
+
+    /* 5. .grid-2x3 (Header top, 6 dark cards) */
+    .grid-2x3 {
+      width: 100vw;
+      height: 100vh;
+      padding: 4.5vw 6vw;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background: var(--bg-main);
+      box-sizing: border-box;
+    }
+    .grid-2x3 .cards-container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(2, auto);
+      gap: 18px;
+      margin-top: 1.5rem;
+      width: 100%;
+    }
+    .grid-2x3 .dark-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 14px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      transition: border-color 0.3s ease, transform 0.35s var(--ease-out-expo);
+    }
+    .grid-2x3 .dark-card:hover {
+      border-color: var(--border-highlight);
+      transform: translateY(-4px);
+    }
+    .grid-2x3 .dark-card .card-tag {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--accent-emerald);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-weight: 600;
+    }
+    .grid-2x3 .dark-card h4 {
+      font-size: 1.15rem;
+      color: var(--text-pure);
+      font-weight: 700;
+    }
+    .grid-2x3 .dark-card p {
+      font-size: 0.92rem;
+      color: var(--text-muted);
+      line-height: 1.45;
+    }
+
+    /* 6. .matrix-2x2 / 3 Columns + Foundation Pillar (Slide 6) */
+    .matrix-2x2 {
+      width: 100vw;
+      height: 100vh;
+      padding: 4vw 6vw;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background: var(--bg-main);
+      box-sizing: border-box;
+    }
+    .routes-3col-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-top: 1.6rem;
+      width: 100%;
+    }
+    .matrix-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 14px;
+      padding: 26px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      transition: transform 0.35s var(--ease-out-expo), border-color 0.3s ease;
+    }
+    .matrix-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--border-highlight);
+    }
+    .matrix-card.highlight {
+      border-color: var(--border-highlight);
+      background: linear-gradient(160deg, var(--bg-surface) 0%, rgba(4, 247, 247, 0.05) 100%);
+    }
+    .matrix-badge {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--accent-emerald);
+      background: rgba(4, 247, 247, 0.1);
+      border: 1px solid rgba(4, 247, 247, 0.22);
+      padding: 4px 11px;
+      border-radius: 6px;
+      width: fit-content;
+      margin-bottom: 14px;
+    }
+
+    /* Conector visual entre as 3 rotas e o pilar base */
+    .pillar-connectors {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      width: 100%;
+      height: 22px;
+      align-items: center;
+      justify-items: center;
+    }
+    .pillar-connectors span {
+      width: 1px;
+      height: 100%;
+      background: linear-gradient(180deg, rgba(4, 247, 247, 0.45), rgba(4, 247, 247, 0.15));
+      position: relative;
+    }
+    .pillar-connectors span::after {
+      content: "";
+      position: absolute;
+      bottom: -3px;
+      left: -3px;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent-emerald);
+      box-shadow: 0 0 8px var(--accent-emerald);
+    }
+
+    /* Card horizontal do Pilar Base (DesignOps Stack) */
+    .foundation-pillar-card {
+      width: 100%;
+      background: linear-gradient(90deg, rgba(4, 247, 247, 0.09) 0%, rgba(17, 17, 17, 0.95) 50%, rgba(4, 247, 247, 0.06) 100%);
+      border: 1px solid var(--border-highlight);
+      border-radius: 16px;
+      padding: 24px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 32px;
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.6), 0 0 30px rgba(4, 247, 247, 0.06);
+      position: relative;
+      overflow: hidden;
+    }
+    .foundation-pillar-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent-emerald), transparent);
+    }
+
+    /* ==========================================================================
+       SLIDE 8: FULL-SCREEN EXECUTIVE IMPACT FINALE (BTG STANDARD)
+       ========================================================================== */
+    .executive-finale {
+      width: 100vw;
+      height: 100vh;
+      padding: 4vw 6vw;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background:
+        radial-gradient(circle at 80% 15%, rgba(4, 247, 247, 0.08) 0%, transparent 45%),
+        radial-gradient(circle at 15% 85%, rgba(4, 247, 247, 0.05) 0%, transparent 45%),
+        linear-gradient(rgba(255, 255, 255, 0.018) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px),
+        var(--bg-main);
+      background-size: 100% 100%, 100% 100%, 48px 48px, 48px 48px, 100% 100%;
+      box-sizing: border-box;
+    }
+
+    .finale-header-row {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 32px;
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 1.5rem;
+    }
+
+    .journey-time-pill {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-highlight);
+      border-radius: 14px;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .exec-kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      width: 100%;
+      margin: auto 0;
+    }
+
+    .exec-kpi-card {
+      background: linear-gradient(180deg, #131315 0%, #0B0B0D 100%);
+      border: 1px solid var(--border-subtle);
+      border-radius: 18px;
+      padding: 34px 30px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+      transition: transform 0.4s var(--ease-out-expo), border-color 0.35s ease;
+    }
+
+    .exec-kpi-card:hover {
+      transform: translateY(-6px);
+      border-color: var(--border-highlight);
+    }
+
+    .exec-kpi-card .kpi-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .exec-kpi-card .kpi-giant-number {
+      font-family: var(--font-primary);
+      font-size: 4.4rem;
+      font-weight: 900;
+      color: var(--accent-emerald);
+      letter-spacing: -0.045em;
+      line-height: 1;
+      margin-bottom: 16px;
+      text-shadow: 0 0 35px rgba(4, 247, 247, 0.18);
+    }
+
+    /* Animated KPI bar */
+    .kpi-bar-track {
+      width: 100%;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+    .kpi-bar-fill {
+      height: 100%;
+      background: var(--accent-emerald);
+      box-shadow: 0 0 12px var(--accent-emerald);
+      transform-origin: left center;
+      transform: scaleX(0);
+      transition: transform 1.3s var(--ease-out-expo);
+      transition-delay: 450ms;
+    }
+    .reveal .slides section.present .kpi-bar-fill {
+      transform: scaleX(1);
+    }
+
+    .exec-kpi-card h3 {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--text-pure);
+      margin-bottom: 8px;
+    }
+
+    .exec-kpi-card p {
+      font-size: 0.96rem;
+      color: var(--text-muted);
+      line-height: 1.55;
+      margin-bottom: 20px;
+    }
+
+    .exec-kpi-card .kpi-footer-tag {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--accent-emerald);
+      background: rgba(4, 247, 247, 0.08);
+      border: 1px solid rgba(4, 247, 247, 0.2);
+      padding: 5px 12px;
+      border-radius: 6px;
+      width: fit-content;
+    }
+
+    .finale-footer-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid var(--border-subtle);
+      padding-top: 1.2rem;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Speaker Notes keyboard indicator -->
+  <div class="notes-hint" title="Pressione 'S' no teclado para abrir o painel de notas com o roteiro do apresentador">
+    <span>Notas:</span> <kbd>S</kbd> &bull; <span>Avançar:</span> <kbd>&rarr;</kbd>
+  </div>
+
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- ====================================================================
+           SLIDE 1: CAPA (.split-screen) — Fotografia Editorial Corporativa
+           ==================================================================== -->
+      <section data-transition="fade">
+        <div class="split-screen">
+          <!-- Left: Imagem Conceitual Corporativa (Empreendedor no Checkout) -->
+          <div class="split-media-wrap">
+            <div class="split-media" style="background-image: url('assets/slide-1-empreendedor.jpg');"></div>
+          </div>
+
+          <!-- Right: Text & Title -->
+          <div class="split-content">
+            <div class="editorial-badge anim-up delay-1">
+              <span class="editorial-dot"></span>
+              UX Research &bull; DesignOps &bull; Product Design
+            </div>
+            <h1 class="slide-title-hero anim-up delay-2">
+              O checkout de 27 Minutos
+            </h1>
+            <div class="sub-emerald anim-up delay-3">
+              Case Contabilizei
+            </div>
+            <p class="text-body anim-up delay-4">
+              Como destravamos a conversão de um dos maiores ecossistemas contábeis do país integrando 
+              pesquisa aprofundada de comportamento (Discovery) e prototipação acelerada orientada por IA Generativa.
+            </p>
+
+            <div class="anim-up delay-5" style="margin-top: 2.5rem; display: flex; gap: 18px; align-items: center;">
+              <div style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-muted);">
+                Líder de Design: <span style="color: var(--text-pure); font-weight: 600;">Jean Felski</span>
+              </div>
+              <div style="width: 4px; height: 4px; border-radius: 50%; background: var(--text-muted);"></div>
+              <div style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--accent-emerald);">
+                Relatório de Impacto
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <aside class="notes">
+          Bem-vindos. Vou apresentar o case de como reconstruímos o checkout da Contabilizei. O nosso foco foi erradicar um gargalo crítico de 27 minutos de jornada, integrando Discovery aprofundado e prototipação rápida orientada por IA na esteira de DesignOps.
+        </aside>
+      </section>
+
+      <!-- ====================================================================
+           SLIDE 2: A ANATOMIA DO PROBLEMA (.overlay-card) — Telas Legadas Reais
+           ==================================================================== -->
+      <section data-transition="fade">
+        <div class="overlay-card" style="background-image: url('assets/legacy-1-dados-erro.png');">
+          <!-- Left: Floating Problem Card -->
+          <div class="floating-card anim-scale delay-1">
+            <div class="editorial-badge" style="border-color: rgba(255, 90, 95, 0.45); color: var(--accent-danger); background: rgba(255, 90, 95, 0.1);">
+              <span class="editorial-dot" style="background: var(--accent-danger); box-shadow: 0 0 8px var(--accent-danger); animation: none;"></span>
+              Diagnóstico de Fricção (Legado)
+            </div>
+            <h2 class="slide-title">A Anatomia do Problema</h2>
+            <div class="sub-emerald">
+              Tempo Médio de Jornada: <span style="font-size: 1.6rem; color: var(--accent-emerald);">&gt; 27 MIN</span>
+            </div>
+            <p class="text-body" style="margin-bottom: 1rem;">
+              A auditoria técnica e comportamental revelou um fluxo excessivamente moroso, onde validações síncronas de API e barreiras cognitivas destruíam o ROI de aquisição.
+            </p>
+
+            <ul class="editorial-list">
+              <li class="anim-up delay-2">
+                <span class="bullet-num">01</span>
+                <div>
+                  <strong style="color: var(--text-pure);">Taxa de Abandono Crítica:</strong>
+                  Erros de input prematuros e botão bloqueado sem rota de ajuda humana.
+                </div>
+              </li>
+              <li class="anim-up delay-3">
+                <span class="bullet-num">02</span>
+                <div>
+                  <strong style="color: var(--text-pure);">Fadiga Cognitiva &amp; APIs Síncronas:</strong>
+                  Validações de CEP e atividades societárias travando o avanço da jornada.
+                </div>
+              </li>
+              <li class="anim-up delay-4">
+                <span class="bullet-num">03</span>
+                <div>
+                  <strong style="color: var(--text-pure);">Desperdício de CAC:</strong>
+                  Campanhas de performance estavam cada mês mais caras e os leads se perdendo no meio do funil.
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Right: Evidências Reais do Checkout Antigo (1/4 Erro + 4/4 Pagamento Legado) -->
+          <div class="legacy-evidence-col">
+            <!-- Topo: Print Legado 1/4 com erro em vermelho -->
+            <div class="browser-frame legacy-frame anim-scale delay-2">
+              <div class="browser-header">
+                <div class="browser-dots"><span></span><span></span><span></span></div>
+                <div class="browser-url">Legado 1/4 &bull; Erro sem placeholder + Botão travado</div>
+                <span class="browser-tag-status tag-legacy">LEGADO</span>
+              </div>
+              <img src="assets/legacy-1-dados-erro.png" alt="Checkout Antigo Etapa 1 com erro de validação">
+            </div>
+
+            <!-- Base: Print Legado 4/4 Pagamento Padrão sem transbordo (movido do Slide 8) -->
+            <div class="browser-frame legacy-frame anim-scale delay-4">
+              <div class="browser-header">
+                <div class="browser-dots"><span></span><span></span><span></span></div>
+                <div class="browser-url">Legado 4/4 &bull; Plano Padrão (R$ 195) &bull; Sem Transbordo</div>
+                <span class="browser-tag-status tag-legacy">LEGADO</span>
+              </div>
+              <img src="assets/legacy-4-pagamento-padrao.png" alt="Checkout Antigo Etapa 4 Pagamento sem transbordo">
+            </div>
+          </div>
+        </div>
+
+        <aside class="notes">
+          Nosso cenário inicial era alarmante: a arquitetura legada com carregamento síncrono de APIs gerava uma jornada com mais de 27 minutos. O cliente sofria de extrema fadiga cognitiva, enquanto as campanhas de performance ficavam cada mês mais caras e os leads se perdiam no meio do funil.
+        </aside>
+      </section>
+
+      <!-- ====================================================================
+           SLIDE 3: DISCOVERY, IN CONTEXT (.split-reverse) — Clarity nas Telas Legadas
+           ==================================================================== -->
+      <section data-transition="fade">
+        <div class="split-reverse">
+          <!-- Left: Text -->
+          <div class="split-content">
+            <div class="editorial-badge anim-up delay-1">
+              <span class="editorial-dot"></span>
+              Metodologia de Campo
+            </div>
+            <h2 class="slide-title anim-up delay-2">Discovery, in context</h2>
+            <div class="sub-emerald anim-up delay-2">Mapeando o atrito real no fluxo antigo</div>
+            <p class="text-body anim-up delay-3">
+              Combinamos observação passiva em escala no checkout legado com entrevistas em profundidade, potencializadas pelo uso da IA na clusterização dos achados.
+            </p>
+
+            <ul class="editorial-list">
+              <li class="anim-up delay-3">
+                <span class="bullet-num">&bull;</span>
+                <div>
+                  <strong style="color: var(--text-pure);">2 Meses de Microsoft Clarity:</strong>
+                  Mapas de calor expuseram hesitação intensa no accordion de dúvidas e rage clicks nos cards rasos de planos.
+                </div>
+              </li>
+              <li class="anim-up delay-4">
+                <span class="bullet-num">&bull;</span>
+                <div>
+                  <strong style="color: var(--text-pure);">12 Entrevistas de Profundidade:</strong>
+                  Entrevistas 1:1 revelaram medo de escolher o plano tributário errado por falta de apoio consultivo na tela.
+                </div>
+              </li>
+              <li class="anim-up delay-5">
+                <span class="bullet-num">&bull;</span>
+                <div>
+                  <strong style="color: var(--accent-emerald);">Gemini como Co-piloto Analítico:</strong>
+                  Cruzamento veloz de transcripts de entrevistas com logs de telemetria para sintetizar padrões de comportamento em tempo recorde.
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Right: 2 Stacked Legacy Screenshots Audited During Discovery -->
+          <div class="stacked-media">
+            <!-- Top: Legacy Step 3 Plans audited with Clarity Heatmap -->
+            <div class="stack-item anim-scale delay-2" style="background-image: url('assets/legacy-3-planos-sem-ia.png');">
+              <span class="ui-callout-pill danger-pill" style="top: 12px; right: 12px;">
+                &#128293; Clarity Heatmap &bull; Dúvida no Accordion &amp; Planos Rasos
+              </span>
+              <div class="heatmap-spot" style="width: 240px; height: 60px; top: 36%; left: 18%;"></div>
+              <div class="heatmap-spot" style="width: 130px; height: 90px; bottom: 14%; left: 54%;"></div>
+              <div class="heatmap-spot" style="width: 120px; height: 85px; bottom: 14%; right: 12%;"></div>
+            </div>
+
+            <!-- Bottom: Legacy Step 2 Company Data / CEP friction -->
+            <div class="stack-item anim-scale delay-4" style="background-image: url('assets/legacy-2-empresa-cep.png');">
+              <span class="ui-callout-pill danger-pill" style="top: 12px; right: 12px;">
+                &#127908; 12 Entrevistas &bull; Atrito em CNAE/CEP Sem Suporte
+              </span>
+              <div class="heatmap-spot" style="width: 190px; height: 70px; top: 48%; left: 15%;"></div>
+              <div class="heatmap-spot" style="width: 160px; height: 65px; bottom: 12%; left: 12%;"></div>
+            </div>
+          </div>
+        </div>
+
+        <aside class="notes">
+          Rodamos um Discovery em três frentes robustas sobre o checkout antigo. O grande diferencial de velocidade foi utilizar o Gemini como co-piloto para cruzar as transcrições qualitativas das 12 entrevistas com os heatmaps de 2 meses do Clarity, identificando exatamente onde o usuário travava.
+        </aside>
+      </section>
+
+      <!-- ====================================================================
+           SLIDE 4: LACUNAS NA ESTRATÉGIA (.grid-2x3)
+           ==================================================================== -->
+      <section data-transition="fade">
+        <div class="grid-2x3">
+          <div class="anim-up delay-1">
+            <div class="editorial-badge">
+              <span class="editorial-dot"></span>
+              Auditoria de Gargalos
+            </div>
+            <h2 class="slide-title">Lacunas na Estratégia</h2>
+            <div class="sub-emerald" style="margin-bottom: 0;">Diagnóstico dos 6 nós críticos de conversão</div>
+          </div>
+
+          <div class="cards-container">
+            <div class="dark-card anim-up delay-1">
+              <span class="card-tag">UX / Cognição</span>
+              <h4>Fadiga Cognitiva</h4>
+              <p>Etapas densas sem feedback progressivo, causando sobrecarga mental no preenchimento.</p>
+            </div>
+
+            <div class="dark-card anim-up delay-2">
+              <span class="card-tag">Growth / Financeiro</span>
+              <h4>Desperdício de CAC</h4>
+              <p>Leads altamente qualificados abandonavam por fricção técnica, encarecendo a aquisição líquida.</p>
+            </div>
+
+            <div class="dark-card anim-up delay-3">
+              <span class="card-tag">Tech / Front-end</span>
+              <h4>Alertas sem Contexto</h4>
+              <p>Mensagens de validação genéricas que não instruíam como sanar impedimentos de CNPJ.</p>
+            </div>
+
+            <div class="dark-card anim-up delay-4">
+              <span class="card-tag">Vendas / Inside Sales</span>
+              <h4>Sem Transbordo</h4>
+              <p>Usuários com dúvidas tributárias complexas ficavam presos no autoatendimento sem suporte humano.</p>
+            </div>
+
+            <div class="dark-card anim-up delay-5">
+              <span class="card-tag">Inteligência Artificial</span>
+              <h4>IA Puramente Reativa</h4>
+              <p>Gatilhos limitados a modais de intenção de saída (exit-intent), sem orientação antecipada de planos.</p>
+            </div>
+
+            <div class="dark-card anim-up delay-6">
+              <span class="card-tag">CRM / Retenção</span>
+              <h4>Régua Falha</h4>
+              <p>E-mails transacionais genéricos de carrinho abandonado com taxa nula de reengajamento.</p>
+            </div>
+          </div>
+        </div>
+
+        <aside class="notes">
+          A auditoria mapeou essas 6 lacunas fundamentais. A IA agia apenas no momento do abandono de forma reativa, os alertas técnicos não explicavam a solução e não existia qualquer rota de transbordo para consultores quando a dúvida tributária era complexa.
+        </aside>
+      </section>
+
+      <!-- ====================================================================
+           SLIDE 5: MUDANÇA DE COMPORTAMENTO (.process-list) — Liderança Tripla
+           ==================================================================== -->
+      <section data-transition="fade">
+        <div class="process-list">
+          <!-- Left: Full height image (Liderança Tripla / Squad Alinhado) -->
+          <div class="process-media-wrap">
+            <div class="process-media" style="background-image: url('assets/slide-5-lideranca-tripla.jpg');"></div>
+          </div>
+
+          <!-- Right: White cards stack -->
+          <div class="process-content">
+            <div class="editorial-badge anim-up delay-1">
+              <span class="editorial-dot"></span>
+              Governança &bull; Operação de Produto
+            </div>
+            <h2 class="slide-title anim-up delay-2">Mudança de Comportamento</h2>
+            <div class="sub-emerald anim-up delay-2">Squad integrado focado em conversão contínua</div>
+
+            <div class="process-card-stack">
+              <!-- White card 1 -->
+              <div class="process-white-card anim-up delay-3">
+                <div class="step-index">01</div>
+                <div>
+                  <h4>Liderança Tripla (Design, Prod, Eng)</h4>
+                  <p>Decisões tomadas com co-autoria desde o discovery, extinguindo gargalos clássicos de handoff e atritos de viabilidade técnica.</p>
+                </div>
+              </div>
+
+              <!-- White card 2 -->
+              <div class="process-white-card anim-up delay-4">
+                <div class="step-index">02</div>
+                <div>
+                  <h4>Kickoff Coliderado</h4>
+                  <p>Envolvimento direto de especialistas em arquitetura de APIs e dados contábeis logo no desenho inicial das experiências.</p>
+                </div>
+              </div>
+
+              <!-- White card 3 -->
+              <div class="process-white-card anim-up delay-5">
+                <div class="step-index">03</div>
+                <div>
+                  <h4>Ritos Ágeis Focados em Conversão</h4>
+                  <p>Cerimônias diárias orientadas por hipóteses de funil, métricas de tempo de sessão e testes contínuos de usabilidade.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <aside class="notes">
+          Para que a solução fosse perene, remodelamos o comportamento do time. Estabelecemos uma Liderança Tripla entre Design, Produto e Engenharia com kickoffs conjuntos e cerimônias diárias focadas estritamente na remoção de fricção no checkout.
+        </aside>
+      </section>
+
+      <!-- ====================================================================
+           SLIDE 6: PRIORIZAÇÃO & PROTOTIPAÇÃO RÁPIDA (3 Colunas Rotas + Pilar Base DesignOps)
+           ==================================================================== -->
+      <section data-transition="fade">
+        <div class="matrix-2x2">
+          <div class="anim-up delay-1">
+            <div class="editorial-badge">
+              <span class="editorial-dot"></span>
+              Experimentação A/B/C
+            </div>
+            <h2 class="slide-title">Priorização &amp; Prototipação Rápida</h2>
+            <div class="sub-emerald" style="margin-bottom: 0;">3 rotas paralelas sustentadas por DesignOps orientado por IA</div>
+          </div>
+
+          <!-- 3 Colunas Lado a Lado: Rotas A, B e C -->
+          <div class="routes-3col-grid">
+            <!-- Rota A -->
+            <div class="matrix-card anim-up delay-2">
+              <div>
+                <span class="matrix-badge">Rota A</span>
+                <h4 style="font-size: 1.3rem; margin-bottom: 8px;">Checkout Direct</h4>
+                <p style="font-size: 0.94rem; color: var(--text-muted); line-height: 1.5;">
+                  Fluxo de autoatendimento direto para perfis autônomos padronizados. Foco em reduzir atritos cognitivos e unificar etapas burocráticas.
+                </p>
+              </div>
+              <div style="font-family: var(--font-mono); font-size: 0.78rem; color: var(--accent-emerald); margin-top: 18px; padding-top: 12px; border-top: 1px solid var(--border-subtle);">
+                Tempo de teste: 1 semana &bull; Validação Lean
+              </div>
+            </div>
+
+            <!-- Rota B -->
+            <div class="matrix-card highlight anim-up delay-3">
+              <div>
+                <span class="matrix-badge">Rota B</span>
+                <h4 style="font-size: 1.3rem; margin-bottom: 8px;">Fast API Assíncrona</h4>
+                <p style="font-size: 0.94rem; color: var(--text-muted); line-height: 1.5;">
+                  Consultas fiscais executadas em background. Eliminação de spinners bloqueantes e telas travadas durante a validação na Receita Federal.
+                </p>
+              </div>
+              <div style="font-family: var(--font-mono); font-size: 0.78rem; color: var(--accent-emerald); margin-top: 18px; padding-top: 12px; border-top: 1px solid var(--border-subtle);">
+                Alta Eficiência Técnica &bull; Desacoplado
+              </div>
+            </div>
+
+            <!-- Rota C -->
+            <div class="matrix-card highlight anim-up delay-4">
+              <div>
+                <span class="matrix-badge">Rota C</span>
+                <h4 style="font-size: 1.3rem; margin-bottom: 8px;">Inside Sales via IA</h4>
+                <p style="font-size: 0.94rem; color: var(--text-muted); line-height: 1.5;">
+                  Roteamento inteligente em tempo real: casos tributários com complexidade societária transbordam imediatamente para consultores humanos.
+                </p>
+              </div>
+              <div style="font-family: var(--font-mono); font-size: 0.78rem; color: var(--accent-emerald); margin-top: 18px; padding-top: 12px; border-top: 1px solid var(--border-subtle);">
+                Maior Conversão Comercial &bull; Transbordo Suave
+              </div>
+            </div>
+          </div>
+
+          <!-- Conectores arquiteturais das 3 rotas para o Pilar Base -->
+          <div class="pillar-connectors anim-up delay-4">
+            <span></span><span></span><span></span>
+          </div>
+
+          <!-- Pilar Base Transversal: DesignOps Stack -->
+          <div class="foundation-pillar-card anim-scale delay-5">
+            <div>
+              <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
+                <span class="matrix-badge" style="margin-bottom: 0; background: var(--accent-emerald); color: #050505;">Pilar Base Transversal</span>
+                <span style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent-emerald); letter-spacing: 0.08em; text-transform: uppercase;">DesignOps Stack</span>
+              </div>
+              <h4 style="font-size: 1.45rem; margin-bottom: 4px; color: var(--text-pure);">Claude Code &amp; Figma Make</h4>
+              <p style="font-size: 0.95rem; color: var(--text-subtle); max-width: 780px; line-height: 1.45;">
+                Fundação necessária às 3 rotas: prototipação com IA gerando interfaces funcionais e tokens em código antes de qualquer commit na squad de engenharia central.
+              </p>
+            </div>
+
+            <div style="text-align: right; flex-shrink: 0; background: rgba(5, 5, 5, 0.65); border: 1px solid var(--border-highlight); padding: 14px 20px; border-radius: 12px;">
+              <div style="font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em;">Time-to-Prototype</div>
+              <div style="font-size: 1.25rem; font-weight: 800; color: var(--accent-emerald); margin-top: 2px;">Ciclos de horas</div>
+              <div style="font-size: 0.8rem; color: var(--text-subtle);">ao invés de semanas</div>
+            </div>
+          </div>
+        </div>
+
+        <aside class="notes">
+          Desenhamos três rotas experimentais lado a lado: Direct, Fast API e Inside Sales via IA. Sustentando todas elas na base, nosso DesignOps Stack com Claude Code e Figma Make permitiu subir protótipos funcionais em ciclos de horas ao invés de semanas, poupando engenharia de produção.
+        </aside>
+      </section>
+
+      <!-- ====================================================================
+           SLIDE 7: A EVOLUÇÃO DA INTERFACE (.split-screen) — Antes vs. Depois Real (Etapa 3/4)
+           ==================================================================== -->
+      <section data-transition="fade">
+        <div class="split-screen reverse-order">
+          <!-- Left: Text -->
+          <div class="split-content">
+            <div class="editorial-badge anim-up delay-1">
+              <span class="editorial-dot"></span>
+              UI Architecture &bull; Antes vs. Depois
+            </div>
+            <h2 class="slide-title anim-up delay-2">A Evolução da Interface</h2>
+            <div class="sub-emerald anim-up delay-2">Smart AI UI</div>
+            <p class="text-body anim-up delay-3">
+              Transformação profunda de formulários engessados em uma experiência guiada, fluida e assistida proativamente pelo motor de inteligência artificial.
+            </p>
+
+            <ul class="editorial-list">
+              <li class="anim-up delay-3">
+                <span class="bullet-num">&check;</span>
+                <div>
+                  <strong style="color: var(--text-pure);">Simplificação Drástica de Dados:</strong>
+                  Cabeçalho compacto em linha única, placeholders claros e redução imediata do esforço visual.
+                </div>
+              </li>
+              <li class="anim-up delay-4">
+                <span class="bullet-num">&check;</span>
+                <div>
+                  <strong style="color: var(--text-pure);">Agrupamento e Transparência:</strong>
+                  Planos redesenhados com checklist claro de entregas (Padrão, Multibenefícios e Experts).
+                </div>
+              </li>
+              <li class="anim-up delay-5">
+                <span class="bullet-num" style="background: var(--accent-emerald); color: #000;">&starf;</span>
+                <div>
+                  <strong style="color: var(--accent-emerald);">Assistente Proativo de IA &amp; Transbordo:</strong>
+                  Inclusão do botão <em>"Me ajude a escolher o plano ideal"</em> + rota direta para especialista via chat verde no canto inferior.
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Right: Comparativo Real DEPOIS (100% visível com botão verde de chat) vs. ANTES (Compacto abaixo) -->
+          <div class="ui-showcase-stage" style="gap: 12px; justify-content: center; padding: 2vh 2.2vw 5vh 2.2vw;">
+            <!-- DEPOIS (NO TOPO, 100% SEM CORTE): Novo 3/4 Completo com Novos Cards + Assistente IA + Botão Verde Chat -->
+            <div class="browser-frame anim-scale delay-2" style="max-width: 680px; border-color: var(--accent-emerald); z-index: 2;">
+              <div class="browser-header">
+                <div class="browser-dots"><span></span><span></span><span></span></div>
+                <div class="browser-url">DEPOIS: Novos Cards + "Me ajude a escolher o plano ideal" + Chat Especialista</div>
+                <span class="browser-tag-status tag-new">DEPOIS (SMART UI)</span>
+              </div>
+              <img src="assets/checkout-3-planos-completo.png" alt="Novo Checkout Etapa 3 Completo com Botão Verde de Chat" style="max-height: 49vh; width: 100%; object-fit: contain; background: #FFFFFF;">
+            </div>
+
+            <!-- ANTES (REDUZIDO ABAIXO): Legado 3/4 Sem IA e Sem Especialista -->
+            <div class="browser-frame legacy-frame anim-scale delay-4" style="max-width: 430px; opacity: 0.85; z-index: 1;">
+              <div class="browser-header" style="padding: 5px 12px;">
+                <div class="browser-dots"><span></span><span></span><span></span></div>
+                <div class="browser-url" style="font-size: 0.6rem;">ANTES: Sem Assistente IA &bull; Sem Botão de Chat</div>
+                <span class="browser-tag-status tag-legacy" style="font-size: 0.58rem;">ANTES (LEGADO)</span>
+              </div>
+              <img src="assets/legacy-3-planos-sem-ia.png" alt="Checkout Antigo Etapa 3 sem IA" style="max-height: 23vh; width: 100%; object-fit: contain; background: #FFFFFF;">
+            </div>
+          </div>
+        </div>
+
+        <aside class="notes">
+          Visualmente, o comparativo entre o depois e o antes na etapa de planos fala por si: na tela superior vemos os novos cards detalhados, o botão "Me ajude a escolher o plano ideal" e o botão verde de chat com especialista no canto inferior direito — elementos inexistentes na versão legada abaixo.
+        </aside>
+      </section>
+
+      <!-- ====================================================================
+           SLIDE 8: PERFORMANCE DE NEGÓCIO (Full-Screen Executive Finale — Sem Imagens)
+           ==================================================================== -->
+      <section data-transition="fade">
+        <div class="executive-finale">
+          <!-- Top Header Row -->
+          <div class="finale-header-row anim-up delay-1">
+            <div>
+              <div class="editorial-badge">
+                <span class="editorial-dot"></span>
+                Resultados Consolidados &bull; Impacto Auditado
+              </div>
+              <h2 class="slide-title" style="font-size: 2.8rem; margin-bottom: 0.3rem;">Performance de Negócio</h2>
+              <div class="sub-emerald" style="margin-bottom: 0;">Impacto direto nos ponteiros de receita e eficiência de aquisição</div>
+            </div>
+
+            <!-- Callout de Redução do Tempo de Jornada -->
+            <div class="journey-time-pill anim-scale delay-2">
+              <div>
+                <div style="font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em;">Tempo Médio de Jornada</div>
+                <div style="display: flex; align-items: baseline; gap: 10px; margin-top: 4px;">
+                  <span style="font-size: 1.25rem; font-weight: 700; color: var(--accent-danger); text-decoration: line-through; opacity: 0.85;">&gt; 27 min</span>
+                  <span style="color: var(--text-muted);">&rarr;</span>
+                  <span style="font-size: 1.8rem; font-weight: 900; color: var(--accent-emerald);">~16 min</span>
+                </div>
+              </div>
+              <div style="height: 36px; width: 1px; background: var(--border-subtle);"></div>
+              <div style="font-family: var(--font-mono); font-size: 0.78rem; color: var(--text-pure); font-weight: 600;">
+                -40% Fricção<br><span style="color: var(--text-muted); font-weight: 400;">no fluxo ponta a ponta</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Center: 3 Monumental Executive KPI Cards -->
+          <div class="exec-kpi-grid">
+            <!-- KPI 1 -->
+            <div class="exec-kpi-card anim-up delay-2">
+              <div>
+                <div class="kpi-eyebrow">01 &bull; Self-Service Funnel</div>
+                <div class="kpi-giant-number">+19%</div>
+                <div class="kpi-bar-track">
+                  <div class="kpi-bar-fill" style="width: 68%;"></div>
+                </div>
+                <h3>Conversão Web</h3>
+                <p>
+                  A simplificação de inputs e as chamadas assíncronas via Fast API reduziram o tempo de jornada de &gt;27 min para ~16 min, estancando a perda de leads pagos.
+                </p>
+              </div>
+              <div class="kpi-footer-tag">Eficiência Direta de CAC</div>
+            </div>
+
+            <!-- KPI 2 -->
+            <div class="exec-kpi-card anim-up delay-3" style="border-color: var(--border-highlight);">
+              <div>
+                <div class="kpi-eyebrow">02 &bull; Assisted Sales Routing</div>
+                <div class="kpi-giant-number">+31%</div>
+                <div class="kpi-bar-track">
+                  <div class="kpi-bar-fill" style="width: 88%;"></div>
+                </div>
+                <h3>Inside Sales</h3>
+                <p>
+                  Roteamento inteligente orientado por IA identificando hesitação e complexidade societária em tempo real, acionando o transbordo humano no momento crítico.
+                </p>
+              </div>
+              <div class="kpi-footer-tag">Transbordo Inteligente via IA</div>
+            </div>
+
+            <!-- KPI 3 -->
+            <div class="exec-kpi-card anim-up delay-4">
+              <div>
+                <div class="kpi-eyebrow">03 &bull; Revenue Expansion</div>
+                <div class="kpi-giant-number">+12%</div>
+                <div class="kpi-bar-track">
+                  <div class="kpi-bar-fill" style="width: 55%;"></div>
+                </div>
+                <h3>Ticket Médio (AOV)</h3>
+                <p>
+                  Nova arquitetura visual de planos e assistente consultivo de IA aumentaram a percepção de valor e a adesão aos pacotes Multibenefícios e Experts.
+                </p>
+              </div>
+              <div class="kpi-footer-tag">Upsell &amp; Cross-sell Fluido</div>
+            </div>
+          </div>
+
+          <!-- Bottom Executive Signature Bar -->
+          <div class="finale-footer-bar anim-up delay-5">
+            <div>
+              <strong style="color: var(--text-pure);">Síntese Executiva:</strong> Design orientado por dados e IA como alavanca comprovada de margem, velocidade operacional e receita recorrente.
+            </div>
+            <div style="font-family: var(--font-mono); font-size: 0.82rem; color: var(--text-pure);">
+              Jean Felski &bull; <span style="color: var(--accent-emerald);">Líder de Design</span>
+            </div>
+          </div>
+        </div>
+
+        <aside class="notes">
+          Para encerrar, o impacto consolidado no negócio: reduzimos o tempo médio de jornada de mais de 27 minutos para cerca de 16 minutos. Isso destravou um crescimento de 19% na conversão web, um salto de 31% em Inside Sales via roteamento inteligente de IA e uma expansão de 12% no ticket médio. Obrigado pelo tempo e estou à disposição para aprofundarmos em qualquer detalhe.
+        </aside>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- Reveal.js Scripts & Plugins -->
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+
+  <script>
+    Reveal.initialize({
+      // Navegação responsiva e fluida
+      hash: true,
+      center: false, // Desativa a centralização padrão conforme solicitado
+      margin: 0,     // Remove bordas externas para design editorial full-bleed
+      width: '100%',
+      height: '100%',
+      minScale: 1,
+      maxScale: 1,
+
+      // Controles sutis e transição suave
+      controls: false, // Oculta setas intrusivas para estética premium de relatório
+      progress: true,
+      slideNumber: 'c/t',
+      transition: 'fade',
+      transitionSpeed: 'default',
+      
+      // Plugins nativos obrigatórios
+      plugins: [ RevealNotes ]
+    });
+  </script>
+</body>
+</html>
